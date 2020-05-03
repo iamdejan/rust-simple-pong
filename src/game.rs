@@ -4,12 +4,12 @@ type BaseNode = Node2D;
 
 #[derive(NativeClass)]
 #[inherit(BaseNode)]
-pub struct Game {}
+pub struct Game;
 
 #[methods]
 impl Game {
     fn _init(_owner: BaseNode) -> Self {
-        Game{}
+        Game
     }
 
     #[export]
