@@ -1,10 +1,10 @@
 use gdnative::*;
 
-#[derive(NativeClass)]
-#[inherit(Node2D)]
-pub struct Game {}
-
 type BaseNode = Node2D;
+
+#[derive(NativeClass)]
+#[inherit(BaseNode)]
+pub struct Game {}
 
 #[methods]
 impl Game {

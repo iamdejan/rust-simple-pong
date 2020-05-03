@@ -1,8 +1,10 @@
 use gdnative::*;
 
+type BaseNode = Node;
+
 /// The HelloWorld "class"
 #[derive(NativeClass)]
-#[inherit(Node)]
+#[inherit(BaseNode)]
 pub struct HelloWorld;
 
 // __One__ `impl` block can have the `#[methods]` attribute, which will generate
@@ -11,7 +13,7 @@ pub struct HelloWorld;
 impl HelloWorld {
     
     /// The "constructor" of the class.
-    fn _init(_owner: Node) -> Self {
+    fn _init(_owner: BaseNode) -> Self {
         HelloWorld
     }
     
@@ -20,7 +22,7 @@ impl HelloWorld {
     // Instead they are"attached" to the parent object, called the "owner".
     // The owner is passed to every single exposed method.
     #[export]
-    fn _ready(&self, _owner: Node) {
+    fn _ready(&self, _owner: BaseNode) {
         // The `godot_print!` macro works like `println!` but prints to the Godot-editor
         // output tab as well.
         godot_print!("hello, world...");
