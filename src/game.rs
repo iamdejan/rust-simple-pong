@@ -21,7 +21,7 @@ impl NativeClass for Game {
     type UserData = MutexData<Game>;
 
     fn class_name() -> &'static str {
-        "Pad"
+        "Game"
     }
 
     fn init(_owner: Self::Base) -> Self {
@@ -48,8 +48,14 @@ impl Game {
             pad0_thrust: Vector2::new(0.0, 0.0),
             pad1_thrust: Vector2::new(0.0, 0.0),
 
-            pad0: Pad{score: 0},
-            pad1: Pad{score: 0},
+            pad0: Pad{
+                score: 0,
+                linear_velocity: Vector2::new(0.0, 0.0)
+            },
+            pad1: Pad{
+                score: 0,
+                linear_velocity: Vector2::new(0.0, 0.0)
+            },
 
             score0_label: Label::new(),
             score1_label: Label::new(),
@@ -58,6 +64,8 @@ impl Game {
 
     #[export]
     unsafe fn _ready(&mut self, owner: BaseNode) {
+        godot_print!("this is Game scene");
+
         let pad0_scene: RigidBody2D = owner
             .get_node(NodePath::from_str("Pad0"))
             .expect("Missing Pad0 node")
@@ -81,12 +89,10 @@ impl Game {
             .expect("Missing Score1 node")
             .cast::<Label>()
             .expect("Cannot cast");
-
-        gdnative::godot_print!("this is Game scene");
     }
 
     #[export]
-    unsafe fn _process(&mut self, _owner: BaseNode) {
+    unsafe fn _process(&mut self, _owner: BaseNode, delta: f64) {
         let input = Input::godot_singleton();
         if Input::is_action_pressed(&input, GodotString::from_str("pad0_up")) {
             self.pad0_thrust = -Vector2::new(0.0, 400.0);
@@ -106,7 +112,9 @@ impl Game {
     }
 
     #[export]
-    unsafe fn _physics_process(&mut self, _owner: BaseNode) {
-        
+    unsafe fn _physics_process(&mut self, _owner: BaseNode, delta: f64) {
+        self.pad0.linear_velocity = self.pad0_thrust;
+        self.pad0_thrust *= 0.95;
+        self.pad1_thrust *= 0.95;
     }
 }

@@ -1,14 +1,18 @@
-[entry]
-
-OSX.64="res://target/debug/librust_simple_pong.dylib"
-
-[dependencies]
-
-OSX.64=[  ]
-
 [general]
 
 singleton=false
 load_once=true
 symbol_prefix="godot_"
 reloadable=true
+
+[entry]
+
+OSX.64="res://target/debug/librust_simple_pong.dylib"
+OSX.32="res://target/debug/librust_simple_pong.dylib"
+X11.64="res://target/debug/libpong.so"
+
+[dependencies]
+
+OSX.64=[  ]
+OSX.32=[  ]
+X11.64=[  ]

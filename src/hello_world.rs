@@ -11,12 +11,12 @@ pub struct HelloWorld;
 // code to automatically bind any exported methods to Godot.
 #[methods]
 impl HelloWorld {
-    
+
     /// The "constructor" of the class.
     fn _init(_owner: BaseNode) -> Self {
         HelloWorld
     }
-    
+
     // In order to make a method known to Godot, the #[export] attribute has to be used.
     // In Godot script-classes do not actually inherit the parent class.
     // Instead they are"attached" to the parent object, called the "owner".
