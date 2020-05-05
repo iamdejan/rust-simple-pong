@@ -16,6 +16,7 @@ extents = Vector2( 6.26036, 75.0098 )
 
 [node name="Pad" type="RigidBody2D"]
 physics_material_override = SubResource( 1 )
+gravity_scale = 0.0
 script = SubResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
