@@ -10,7 +10,9 @@
 
 ### Running
 
-Just open this project with Godot, and you're good to go.
+1) Run `$ cargo build`.
+2) If you're using RLS from Visual Studio Code, add `.gdignore` file to `/target/rls` folder.
+3) Just open this project with Godot, and you're good to go.
 
 ## Built With
 
