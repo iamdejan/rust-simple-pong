@@ -10,6 +10,8 @@ pub struct Game {
     pad1_thrust: Vector2,
     pad0: Pad,
     pad1: Pad,
+    pad0_node: RigidBody2D,
+    pad1_node: RigidBody2D,
     score0_label: Label,
     score1_label: Label
 }
@@ -48,14 +50,11 @@ impl Game {
             pad0_thrust: Vector2::new(0.0, 0.0),
             pad1_thrust: Vector2::new(0.0, 0.0),
 
-            pad0: Pad{
-                score: 0,
-                linear_velocity: Vector2::new(0.0, 0.0)
-            },
-            pad1: Pad{
-                score: 0,
-                linear_velocity: Vector2::new(0.0, 0.0)
-            },
+            pad0: Pad{score: 0},
+            pad1: Pad{score: 1},
+
+            pad0_node: RigidBody2D::new(),
+            pad1_node: RigidBody2D::new(),
 
             score0_label: Label::new(),
             score1_label: Label::new(),
@@ -66,19 +65,20 @@ impl Game {
     unsafe fn _ready(&mut self, owner: BaseNode) {
         godot_print!("this is Game scene");
 
-        let pad0_scene: RigidBody2D = owner
+        self.pad0_node = owner
             .get_node(NodePath::from_str("Pad0"))
             .expect("Missing Pad0 node")
             .cast::<RigidBody2D>()
             .expect("Cannot cast");
-        self.pad0 = Pad::init(pad0_scene);
 
-        let pad1_scene: RigidBody2D = owner
+        self.pad1_node = owner
             .get_node(NodePath::from_str("Pad1"))
             .expect("Missing Pad1 node")
             .cast::<RigidBody2D>()
             .expect("Cannot cast");
-        self.pad1 = Pad::init(pad1_scene);
+
+        self.pad0 = Pad::init(self.pad0_node);
+        self.pad1 = Pad::init(self.pad1_node);
 
         self.score0_label = owner.get_node(NodePath::from_str("Score0"))
             .expect("Missing Score0 node")
@@ -92,7 +92,7 @@ impl Game {
     }
 
     #[export]
-    unsafe fn _process(&mut self, _owner: BaseNode, delta: f64) {
+    unsafe fn _process(&mut self, _owner: BaseNode, _delta: f64) {
         let input = Input::godot_singleton();
         if Input::is_action_pressed(&input, GodotString::from_str("pad0_up")) {
             self.pad0_thrust = -Vector2::new(0.0, 400.0);
@@ -112,8 +112,10 @@ impl Game {
     }
 
     #[export]
-    unsafe fn _physics_process(&mut self, _owner: BaseNode, delta: f64) {
-        self.pad0.linear_velocity = self.pad0_thrust;
+    unsafe fn _physics_process(&mut self, _owner: BaseNode, _delta: f64) {
+        self.pad0_node.set_linear_velocity(self.pad0_thrust);
+        self.pad1_node.set_linear_velocity(self.pad1_thrust);
+
         self.pad0_thrust *= 0.95;
         self.pad1_thrust *= 0.95;
     }

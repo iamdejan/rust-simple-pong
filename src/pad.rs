@@ -5,7 +5,6 @@ type BaseNode = RigidBody2D;
 
 pub struct Pad {
     pub score: i32,
-    pub linear_velocity: Vector2
 }
 
 unsafe impl Send for Pad {}
@@ -27,11 +26,6 @@ impl NativeClass for Pad {
             .with_getter(|pad: &Pad, _| pad.score)
             .with_setter(|pad: &mut Pad, _: BaseNode, score: i32| pad.score = score)
             .done();
-
-        builder.add_property::<Vector2>("linear_velocity")
-            .with_getter(|pad: &Pad, _| pad.linear_velocity)
-            .with_setter(|pad: &mut Pad, _: BaseNode, linear_velocity: Vector2| pad.linear_velocity = linear_velocity)
-            .done();
     }
 }
 
@@ -39,19 +33,13 @@ impl NativeClass for Pad {
 impl Pad {
     fn _init() -> Pad {
         Pad {
-            score: 0,
-            linear_velocity: Vector2::new(0.0, 0.0),
+            score: 0
         }
     }
 
     #[export]
-    unsafe fn _ready(&mut self, _owner: BaseNode) {
+    fn _ready(&mut self, _owner: BaseNode) {
         godot_print!("Pad is ready");
         self.score = 0;
-    }
-
-    #[export]
-    unsafe fn _physics_process(&self, mut owner: BaseNode, delta: f64) {
-        owner.set_linear_velocity(self.linear_velocity);
     }
 }
