@@ -1,11 +1,67 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://gdnative.gdnlib" type="GDNativeLibrary" id=1]
+[ext_resource path="res://scenes/Pad.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Wall.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/Ball.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/Goal.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/fonts/arial-unicode-ms.ttf" type="DynamicFontData" id=6]
 
 [sub_resource type="NativeScript" id=1]
 resource_name = "Game"
 class_name = "Game"
 library = ExtResource( 1 )
 
+[sub_resource type="DynamicFont" id=2]
+size = 100
+font_data = ExtResource( 6 )
+
 [node name="Game" type="Node2D"]
 script = SubResource( 1 )
+
+[node name="Pad0" parent="." instance=ExtResource( 2 )]
+position = Vector2( 30, 360 )
+
+[node name="Pad1" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1250, 360 )
+
+[node name="Ball" parent="." instance=ExtResource( 4 )]
+position = Vector2( 640, 30 )
+
+[node name="TopWall" parent="." instance=ExtResource( 3 )]
+position = Vector2( 640, -10 )
+
+[node name="BottomWall" parent="." instance=ExtResource( 3 )]
+position = Vector2( 640, 730 )
+
+[node name="Goal0" parent="." instance=ExtResource( 5 )]
+position = Vector2( -10, 360 )
+
+[node name="Goal1" parent="." instance=ExtResource( 5 )]
+position = Vector2( 1290, 360 )
+
+[node name="Score0" type="Label" parent="."]
+margin_left = 74.0
+margin_top = 23.0
+margin_right = 217.0
+margin_bottom = 158.0
+custom_fonts/font = SubResource( 2 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Score1" type="Label" parent="."]
+margin_left = 1051.0
+margin_top = 23.0
+margin_right = 1210.0
+margin_bottom = 158.0
+custom_fonts/font = SubResource( 2 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
