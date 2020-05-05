@@ -1,4 +1,6 @@
-# Godot Simple Pong
+# Rust Simple Pong
+
+A simple Pong game, made with Godot & Rust through GDNative.
 
 <!-- This repository is used to accompany my article in LinkedIn, ... -->
 
