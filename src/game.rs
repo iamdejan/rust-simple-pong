@@ -2,16 +2,22 @@ use gdnative::*;
 use gdnative::user_data::MutexData;
 
 use crate::pad::Pad;
+use crate::ball::Ball;
 
 type BaseNode = Node2D;
 
 pub struct Game {
     pad0_thrust: Vector2,
     pad1_thrust: Vector2,
+
+    ball: Ball,
     pad0: Pad,
     pad1: Pad,
+
+    ball_node: RigidBody2D,
     pad0_node: RigidBody2D,
     pad1_node: RigidBody2D,
+
     score0_label: Label,
     score1_label: Label
 }
@@ -50,9 +56,11 @@ impl Game {
             pad0_thrust: Vector2::new(0.0, 0.0),
             pad1_thrust: Vector2::new(0.0, 0.0),
 
+            ball: Ball{timer: Timer::new()},
             pad0: Pad{score: 0},
             pad1: Pad{score: 1},
 
+            ball_node: RigidBody2D::new(),
             pad0_node: RigidBody2D::new(),
             pad1_node: RigidBody2D::new(),
 
@@ -64,6 +72,12 @@ impl Game {
     #[export]
     unsafe fn _ready(&mut self, owner: BaseNode) {
         godot_print!("this is Game scene");
+
+        self.ball_node = owner
+            .get_node(NodePath::from_str("Ball"))
+            .expect("Missing Ball node")
+            .cast::<RigidBody2D>()
+            .expect("Cannot cast");
 
         self.pad0_node = owner
             .get_node(NodePath::from_str("Pad0"))
@@ -77,6 +91,7 @@ impl Game {
             .cast::<RigidBody2D>()
             .expect("Cannot cast");
 
+        self.ball = Ball::init(self.ball_node);
         self.pad0 = Pad::init(self.pad0_node);
         self.pad1 = Pad::init(self.pad1_node);
 
@@ -89,6 +104,17 @@ impl Game {
             .expect("Missing Score1 node")
             .cast::<Label>()
             .expect("Cannot cast");
+
+        let emmiter = &mut owner.get_node(NodePath::from_str("Ball"))
+            .expect("Missing Ball node");
+        let object = &owner.to_object();
+        emmiter.connect(
+            GodotString::from_str("body_entered"),
+            Some(*object),
+            GodotString::from_str("on_ball_entered_goal"),
+            VariantArray::new(),
+            0
+        ).unwrap();
     }
 
     #[export]
@@ -118,5 +144,20 @@ impl Game {
 
         self.pad0_thrust *= 0.95;
         self.pad1_thrust *= 0.95;
+    }
+
+    #[export]
+    unsafe fn on_ball_entered_goal(&mut self, _owner: BaseNode, data: Variant) {
+        let node: Node2D = data.try_to_object::<Node2D>().expect("Fail to cast");
+        let node_name: String = node.get_name().to_string();
+        if node_name.starts_with("Goal") {
+            if node_name == "Goal0" {
+                self.pad1.score += 1;
+            } else if node_name == "Goal1" {
+                self.pad0.score += 1;
+            }
+            self.ball_node.set_global_position(Vector2::new(640.0, 30.0));
+            self.ball.reset(self.ball_node);
+        }
     }
 }

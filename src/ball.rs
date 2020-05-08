@@ -1,11 +1,12 @@
 use gdnative::*;
+use std::{thread, time};
 
 type BaseNode = RigidBody2D;
 
 #[derive(NativeClass)]
 #[inherit(BaseNode)]
 pub struct Ball {
-    timer: Timer
+    pub timer: Timer
 }
 
 #[methods]
@@ -27,20 +28,19 @@ impl Ball {
         self.reset(owner);
     }
 
-    unsafe fn reset(&mut self, mut owner: BaseNode) {
-        owner.set_global_position(Vector2::new(640.0, 30.0));
-        owner.set_physics_process(false);
+    pub unsafe fn reset(&mut self, mut owner: BaseNode) {
+        owner.get_global_position().x = 640.0;
+        owner.get_global_position().y = 30.0;
         owner.set_linear_velocity(Vector2::new(0.0, 0.0));
     }
 
     #[export]
     unsafe fn _process(&mut self, owner: BaseNode, _delta: f64) {
         if self.timer.is_stopped() {
+            godot_print!("{}", owner.get_global_position());
             return;
         }
 
-        let debug_text = format!("time left = {}", self.timer.get_time_left());
-        godot_print!("{}", debug_text);
         if self.timer.get_time_left() <= 0.1 {
             godot_print!("Time out!");
             self.on_timer_timeout(owner);
