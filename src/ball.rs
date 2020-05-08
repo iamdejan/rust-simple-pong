@@ -1,5 +1,4 @@
 use gdnative::*;
-use std::{thread, time};
 
 type BaseNode = RigidBody2D;
 
