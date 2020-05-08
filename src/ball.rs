@@ -28,7 +28,7 @@ impl Ball {
     }
 
     pub unsafe fn reset(&mut self, mut owner: BaseNode) {
-        owner.set_global_position(Vector2::new(640.0, 360.0));
+        owner.set_global_position(Vector2::new(640.0, 30.0));
         owner.set_linear_velocity(Vector2::new(0.0, 0.0));
     }
 
